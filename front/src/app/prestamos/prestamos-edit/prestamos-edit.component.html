@@ -1,0 +1,49 @@
+<div class="container">
+    <h1 *ngIf="prestamo.id == null">Crear préstamo</h1>
+    <h1 *ngIf="prestamo.id != null">Modificar préstamo</h1>
+  
+    <form>
+      <mat-form-field>
+        <mat-label>Identificador</mat-label>
+        <input type="text" matInput placeholder="Identificador" [(ngModel)]="prestamo.id" name="id" disabled>
+      </mat-form-field>
+  
+      <mat-form-field>
+        <mat-label>Cliente</mat-label>
+        <mat-select [(ngModel)]="prestamo.clientesId" name="clientesId" required>
+          <mat-option *ngFor="let cliente of clientes" [value]="cliente.id">
+            {{ cliente.name }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+  
+      <mat-form-field>
+        <mat-label>Juego</mat-label>
+        <mat-select [(ngModel)]="prestamo.gameId" name="gameId" required>
+          <mat-option *ngFor="let juego of juegos" [value]="juego.id">
+            {{ juego.title }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+  
+      <mat-form-field>
+        <mat-label>Fecha de préstamo</mat-label>
+        <input matInput [matDatepicker]="picker1" [(ngModel)]="prestamo.fechaPrestamo" name="fechaPrestamo" required>
+        <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
+        <mat-datepicker #picker1></mat-datepicker>
+      </mat-form-field>
+  
+      <mat-form-field>
+        <mat-label>Fecha de devolución</mat-label>
+        <input matInput [matDatepicker]="picker2" [(ngModel)]="prestamo.fechaDevolucion" name="fechaDevolucion" required>
+        <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
+        <mat-datepicker #picker2></mat-datepicker>
+      </mat-form-field>
+    </form>
+  
+    <div class="buttons">
+      <button mat-stroked-button (click)="onClose()">Cerrar</button>
+      <button mat-flat-button color="primary" (click)="onSave()">Guardar</button>
+    </div>
+  </div>
+  
