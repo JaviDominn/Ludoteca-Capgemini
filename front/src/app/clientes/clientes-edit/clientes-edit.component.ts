@@ -28,6 +28,10 @@ export class ClientesEditComponent implements OnInit {
   }
 
   onSave() {
+    if (this.clientes.name == '' || !this.clientes.name) {
+            alert("El nombre del cliente no puede estar vacío.");
+            return;
+        }
     this.clientesService.saveClientes(this.clientes).subscribe(
         result => {
             this.dialogRef.close();

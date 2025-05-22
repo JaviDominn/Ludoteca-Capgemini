@@ -28,6 +28,16 @@ export class AuthorEditComponent implements OnInit {
     }
 
     onSave() {
+        if (this.author.name == '' || !this.author.name) {
+            alert("El nombre del autor no puede estar vacío.");
+            return;
+        }
+
+        if (this.author.nationality == '' || !this.author.nationality) {
+            alert("La nacionalidad no puede estar vacía.");
+            return;
+        }
+
         this.authorService.saveAuthor(this.author).subscribe(result =>  {
             this.dialogRef.close();
         }); 

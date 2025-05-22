@@ -28,6 +28,10 @@ export class CategoryEditComponent implements OnInit {
   }
 
   onSave() {
+    if (this.category.name == '' || !this.category.name) {
+            alert("El nombre de la categoría no puede estar vacío.");
+            return;
+        }
     this.categoryService.saveCategory(this.category).subscribe(result => {
       this.dialogRef.close();
     });    

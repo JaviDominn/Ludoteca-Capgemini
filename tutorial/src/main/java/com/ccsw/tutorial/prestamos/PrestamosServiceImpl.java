@@ -20,11 +20,8 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 @Service
 @Transactional
@@ -87,45 +84,6 @@ public class PrestamosServiceImpl implements PrestamosService {
 
     @Override
     public void save(Long id, PrestamosDto data) {
-
-        // Validación 1: Fecha de fin no puede ser anterior a la de inicio
-        if (data.getFechaDevolucion().isBefore(data.getFechaPrestamo())) {
-            throw new IllegalArgumentException("La fecha de devolución no puede ser anterior a la fecha de préstamo.");
-        }
-
-        // Validación 2: Duración máxima de 14 días
-        if (data.getFechaPrestamo().plusDays(14).isBefore(data.getFechaDevolucion())) {
-            throw new IllegalArgumentException("La duración del préstamo no puede superar los 14 días.");
-        }
-
-        // Validación 3: El juego no puede estar prestado a otro cliente en el mismo rango
-        List<Prestamos> prestamosSolapados = prestamosRepository.findByGameIdAndDateRangeOverlap(data.getGameId(), data.getFechaPrestamo(), data.getFechaDevolucion());
-
-        if (!prestamosSolapados.isEmpty()) {
-            boolean hayConflicto = prestamosSolapados.stream().anyMatch(p -> !p.getId().equals(id));
-            if (hayConflicto) {
-                throw new IllegalArgumentException("El juego ya está prestado en ese rango de fechas.");
-            }
-        }
-
-        // Validación 4: El cliente no puede tener más de 2 juegos en un mismo día
-        List<Prestamos> prestamosCliente = prestamosRepository.findByClienteIdAndDateRangeOverlap(data.getClientesId(), data.getFechaPrestamo(), data.getFechaDevolucion());
-
-        Map<LocalDate, Long> prestamosPorDia = new HashMap<>();
-        for (Prestamos p : prestamosCliente) {
-            LocalDate start = p.getFechaPrestamo();
-            LocalDate end = p.getFechaDevolucion();
-            for (LocalDate date = start; !date.isAfter(end); date = date.plusDays(1)) {
-                prestamosPorDia.put(date, prestamosPorDia.getOrDefault(date, 0L) + 1);
-            }
-        }
-
-        for (LocalDate date = data.getFechaPrestamo(); !date.isAfter(data.getFechaDevolucion()); date = date.plusDays(1)) {
-            long count = prestamosPorDia.getOrDefault(date, 0L);
-            if (count >= 2) {
-                throw new IllegalArgumentException("El cliente ya tiene 2 préstamos en la fecha: " + date);
-            }
-        }
 
         // Guardar o actualizar el préstamo
         Prestamos prestamos = (id == null) ? new Prestamos() : this.get(id);

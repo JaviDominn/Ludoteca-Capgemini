@@ -6,6 +6,7 @@ import { CategoryService } from 'src/app/category/category.service';
 import { Category } from 'src/app/category/model/Category';
 import { GameService } from '../game.service';
 import { Game } from '../model/Game';
+import { Title } from '@angular/platform-browser';
 
 @Component({
     selector: 'app-game-edit',
@@ -50,7 +51,6 @@ export class GameEditComponent implements OnInit {
         this.authorService.getAllAuthors().subscribe(
             authors => {
                 this.authors = authors
-
                 if (this.game.author != null) {
                     let authorFilter: Author[] = authors.filter(author => author.id == this.data.game.author.id);
                     if (authorFilter != null) {
@@ -62,10 +62,20 @@ export class GameEditComponent implements OnInit {
     }
 
     onSave() {
+        if (this.game.title == '' || !this.game.title) {
+            alert("El titulo no puede estar vacío.");
+            return;
+        }
+        if (this.game.age == null || this.game.age < 0) {
+            alert("La edad recomendada no puede ser negativa ni estar vacía.");
+            return;
+        }
+
         this.gameService.saveGame(this.game).subscribe(result => {
             this.dialogRef.close();
         });    
-    }  
+    }
+
 
     onClose() {
         this.dialogRef.close();

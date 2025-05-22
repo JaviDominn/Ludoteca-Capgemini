@@ -57,7 +57,7 @@ public class PrestamosController {
      * @param dto datos del préstamo
      */
     @Operation(summary = "Save or Update", description = "Guarda o actualiza un préstamo")
-    @PutMapping({ "", "/{id}" })
+    @RequestMapping(path = { "", "/{id}" }, method = RequestMethod.PUT)
     public void save(@PathVariable(name = "id", required = false) Long id, @RequestBody PrestamosDto dto) {
         this.prestamosService.save(id, dto);
     }

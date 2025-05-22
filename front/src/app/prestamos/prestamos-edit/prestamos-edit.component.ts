@@ -44,6 +44,8 @@ export class PrestamosEditComponent implements OnInit {
   }
 
   onSave() {
+
+    
     // Validaciones
     if (this.prestamo.fechaDevolucion < this.prestamo.fechaPrestamo) {
       alert("La fecha de devolución no puede ser anterior a la fecha de préstamo.");
@@ -58,9 +60,15 @@ export class PrestamosEditComponent implements OnInit {
       }
     }
 
-    this.prestamosService.savePrestamo(this.prestamo).subscribe(() => {
-      this.dialogRef.close();
+
+    console.log('Préstamo guardado exitosamente:', this.prestamo);
+    this.prestamosService.savePrestamo(this.prestamo).subscribe({
+      next: () => {
+        
+        this.dialogRef.close();
+      }
     });
+
   }
 
   onClose() {
